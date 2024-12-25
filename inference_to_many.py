@@ -64,6 +64,7 @@ def main():
     resynthesized_wav = inv_preemphasize(inv_mel_spectrogram(mel_spec.T))
     ckpt_name = args.ckpt.split('/')[-1].split('.')[0].split('-')[-1]
     wav_name = args.src_wav.split('/')[-1].split('.')[0]
+    os.makedirs(args.save_dir, exist_ok=True)
     save_wav(synthesized_wav, os.path.join(args.save_dir, '{}-to-{}-converted-{}.wav'.format(wav_name, args.tgt_spk, ckpt_name)))
     save_wav(resynthesized_wav, os.path.join(args.save_dir, '{}-src-cp-syn-{}.wav'.format(wav_name, ckpt_name)))
     return

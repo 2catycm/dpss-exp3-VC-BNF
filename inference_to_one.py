@@ -55,6 +55,7 @@ def main():
     predicted_mels = np.squeeze(predicted_mels.detach().numpy(), axis=1)
 
     # 5. synthesize wav
+    os.makedirs(args.save_dir, exist_ok=True)
     synthesized_wav = inv_preemphasize(inv_mel_spectrogram(predicted_mels.T))
     resynthesized_wav = inv_preemphasize(inv_mel_spectrogram(mel_spec.T))
     ckpt_name = args.ckpt.split('/')[-1].split('.')[0]
