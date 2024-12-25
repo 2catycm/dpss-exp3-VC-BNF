@@ -216,11 +216,11 @@ class BLSTMToManyConversionModel(nn.Module):
         spk_embds =spk_embds.repeat(x.shape[0],1,1)
         
         # add speaker embd to the inputs
-        blstm1_inputs = _ # give your implementation here
+        blstm1_inputs = x + self.emb_proj1(spk_embds)
         # pass to the 1st BLSTM layer
         blstm1_outs, _ = self.blstm1(blstm1_inputs)
         # add speaker embd to the outputs of 1st lstm
-        blstm2_inputs = _  # give your implementation here
+        blstm2_inputs = blstm1_outs + self.emb_proj2(spk_embds)
         # pass to the 2nd BLSTM layer
         blstm2_outs, _ = self.blstm2(blstm2_inputs)
         # project to the output dimension
@@ -245,6 +245,7 @@ class SPKEmbedding(nn.Module):
         super(SPKEmbedding, self).__init__()
         # define your module components below
         # e.g. self.embedding_table = ...
+        self.embedding_table = nn.Embedding(num_spk, embd_dim)
         #from zxt
         
         
@@ -255,9 +256,7 @@ class SPKEmbedding(nn.Module):
         :param spk_inds: speaker indices, should be of type torch.Longtensor
         :return: speaker embedding, should be of shape [batch, out_channels]
         """
-        # define your inference process below
-        # e.g. return self.embedding_table(spk_inds)
-        pass
+        return self.embedding_table(spk_inds)
 
 
 class CustomToOneConversionModel(nn.Module):
