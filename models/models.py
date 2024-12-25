@@ -79,7 +79,7 @@ class BLSTMResConversionModel(nn.Module):
         # project to the output dimension
         initial_outs = self.out_projection(blstm2_out)
         residual = self.resnet(initial_outs)
-        final_outs = _  # define the final outputs here
+        final_outs = initial_outs + residual
         return final_outs
 
 
@@ -89,7 +89,7 @@ class ResidualNet(nn.Module):
     for predicted Mel-spectrogram. It's widely accepted that
     this can help generate much more accurate Mel-spectrogram.
     """
-    def __init__(self, channels, other_params):
+    def __init__(self, channels, **other_params):
         """
         :param channels: equal to dimension of the Mel-spectrogram
         :param other_params: parameters for the definition of your residual net
@@ -97,15 +97,19 @@ class ResidualNet(nn.Module):
         super(ResidualNet, self).__init__()
         self.channels = channels
         # define your module components below
-        # e.g. self.dense_layer = nn.Linear(in_features=channels, out_features=channels)
+        self.conv1 = nn.Conv1d(in_channels=channels, out_channels=channels, kernel_size=3, padding=1)
+        self.relu = nn.ReLU()
+        self.conv2 = nn.Conv1d(in_channels=channels, out_channels=channels, kernel_size=3, padding=1)
 
     def forward(self, x):
         """
         :param x: input mel-spectrogram
         :return: output improved mel-spectrogram
         """
-        # define your inference process below
-        pass
+        residual = self.conv1(x.transpose(1, 2))
+        residual = self.relu(residual)
+        residual = self.conv2(residual)
+        return residual.transpose(1, 2)
 
 
 class BLSTMToManyConversionModel(nn.Module):

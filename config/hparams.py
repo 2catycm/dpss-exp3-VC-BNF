@@ -72,3 +72,10 @@ class Hparams:
     class BLSTMToManyConversionModel:
         lstm_hidden = 256  # LSTM隐藏层维度
         spk_embd_dim = 64  # 说话人嵌入维度
+
+    class ResidualNet:
+        other_params = {
+            'param1': 'value1',
+            'param2': 'value2'
+            # 添加其他需要的参数
+        }
