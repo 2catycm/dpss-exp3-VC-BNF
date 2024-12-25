@@ -142,3 +142,30 @@ CUDA_VISIBLE_DEVICES=0 python inference_to_many.py --src_wav /path/to/source/*.w
 This project is a vanilla voice conversion system based on BNFs. 
 
 When you encounter problems while finishing your project, search the issues first to see if there are similar problems. If there are no similar problems, you can create new issues and state you problems clearly.
+
+## 参数使用情况
+
+以下是 `hparams.py` 中 `Audio` 类的参数在项目中的使用情况：
+
+| 参数名              | 使用位置                                                     | 使用函数                     | 使用方式                         |
+| ------------------- | ------------------------------------------------------------ | ---------------------------- | -------------------------------- |
+| `num_mels`          | [`utils/audio_others.py`](utils/audio_others.py)             | `extract_mel_spectrogram`    | 用于梅尔频谱的维度               |
+| `ppg_dim`           | 未找到使用位置                                               | 未找到使用函数               |                                  |
+| `bn_dim`            | 未找到使用位置                                               | 未找到使用函数               |                                  |
+| `num_freq`          | [`utils/audio.py`](utils/audio.py)                           | `compute_stft`               | 用于 STFT 频率维度               |
+| `min_mel_freq`      | [`utils/audio.py`](utils/audio.py)                           | `extract_mel_spectrogram`    | 用于梅尔频谱的最低频率           |
+| `max_mel_freq`      | [`utils/audio.py`](utils/audio.py)                           | `extract_mel_spectrogram`    | 用于梅尔频谱的最高频率           |
+| `sample_rate`       | [`utils/audio_others.py`](utils/audio_others.py), [`utils/audio.py`](utils/audio.py) | `load_wav`, `resample_audio` | 用于采样率                       |
+| `frame_length_ms`   | [`utils/audio.py`](utils/audio.py)                           | `compute_stft`               | 用于帧长                         |
+| `frame_shift_ms`    | [`utils/audio.py`](utils/audio.py)                           | `compute_stft`               | 用于帧移                         |
+| `upper_f0`          | 未找到使用位置                                               | 未找到使用函数               |                                  |
+| `lower_f0`          | 未找到使用位置                                               | 未找到使用函数               |                                  |
+| `n_mfcc`            | [`utils/audio_others.py`](utils/audio_others.py)             | `extract_mfcc`               | 用于 MFCC 特征的维度             |
+| `preemphasize`      | [`utils/audio_others.py`](utils/audio_others.py), [`utils/audio.py`](utils/audio.py) | `preemphasize_audio`         | 用于预加重系数                   |
+| `min_level_db`      | [`utils/audio.py`](utils/audio.py)                           | `normalize_audio`            | 用于最低 dB 值                   |
+| `ref_level_db`      | [`utils/audio_others.py`](utils/audio_others.py), [`utils/audio.py`](utils/audio.py) | `normalize_audio`            | 用于参考 dB 值                   |
+| `max_abs_value`     | [`utils/audio.py`](utils/audio.py)                           | `normalize_audio`            | 用于归一化后的最大绝对值         |
+| `symmetric_specs`   | [`utils/audio.py`](utils/audio.py)                           | `normalize_audio`            | 用于是否对称归一化               |
+| `griffin_lim_iters` | [`utils/audio_others.py`](utils/audio_others.py), [`utils/audio.py`](utils/audio.py) | `griffin_lim`                | 用于 Griffin-Lim 算法的迭代次数  |
+| `power`             | [`utils/audio.py`](utils/audio.py)                           | `compute_stft`               | 用于幅度谱的幂次                 |
+| `center`            | [`utils/audio_others.py`](utils/audio_others.py), [`utils/audio.py`](utils/audio.py) | `compute_stft`               | 用于是否在每帧中心进行窗函数处理 |
