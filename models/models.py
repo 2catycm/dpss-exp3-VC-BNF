@@ -83,18 +83,18 @@ class BLSTMResConversionModel(nn.Module):
         return final_outs
 
 
-class ResidualNet(nn.Module):
+class ResidualNetViaConv(nn.Module):
     """
     Residual network used to generate residual information
     for predicted Mel-spectrogram. It's widely accepted that
     this can help generate much more accurate Mel-spectrogram.
     """
-    def __init__(self, channels, **other_params):
+    def __init__(self, channels, other_params):
         """
         :param channels: equal to dimension of the Mel-spectrogram
         :param other_params: parameters for the definition of your residual net
         """
-        super(ResidualNet, self).__init__()
+        super().__init__()
         self.channels = channels
         # define your module components below
         self.conv1 = nn.Conv1d(in_channels=channels, out_channels=channels, kernel_size=3, padding=1)
@@ -110,6 +110,62 @@ class ResidualNet(nn.Module):
         residual = self.relu(residual)
         residual = self.conv2(residual)
         return residual.transpose(1, 2)
+
+class ResidualNetViaMLP(nn.Module):
+    """
+    Residual network used to generate residual information
+    for predicted Mel-spectrogram. It's widely accepted that
+    this can help generate much more accurate Mel-spectrogram.
+    """
+    def __init__(self, channels, other_params:dict):
+        """
+        :param channels: equal to dimension of the Mel-spectrogram
+        :param other_params: parameters for the definition of your residual net
+        """
+        super().__init__()
+        self.channels = channels
+        self.hidden_units = other_params['hidden_units']
+        self.fc1 = nn.Linear(self.channels, self.hidden_units)
+        self.relu = nn.ReLU()
+        self.fc2 = nn.Linear(self.hidden_units, self.channels)
+    def forward(self, x):
+        """
+        :param x: input mel-spectrogram
+        :return: output improved mel-spectrogram
+        """
+        residual = self.fc1(x)
+        residual = self.relu(residual)
+        residual = self.fc2(residual)
+        return residual
+
+# from kan import KAN
+from fastkan import FastKAN as KAN
+class ResidualNetViaKAN(nn.Module):
+    """
+    Residual network used to generate residual information
+    for predicted Mel-spectrogram. It's widely accepted that
+    this can help generate much more accurate Mel-spectrogram.
+    """
+    def __init__(self, channels, other_params:dict):
+        """
+        :param channels: equal to dimension of the Mel-spectrogram
+        :param other_params: parameters for the definition of your residual net
+        """
+        super().__init__()
+        self.channels = channels
+        self.hidden_units = other_params['hidden_units']
+        self.kan = KAN([self.channels, self.hidden_units, self.channels])
+
+    def forward(self, x):
+        """
+        :param x: input mel-spectrogram
+        :return: output improved mel-spectrogram
+        """
+        return self.kan(x)
+ResidualNet = ResidualNetViaKAN
+        
+
+    
 
 
 class BLSTMToManyConversionModel(nn.Module):

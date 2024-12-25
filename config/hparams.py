@@ -74,8 +74,6 @@ class Hparams:
         spk_embd_dim = 64  # 说话人嵌入维度
 
     class ResidualNet:
-        other_params = {
-            'param1': 'value1',
-            'param2': 'value2'
-            # 添加其他需要的参数
-        }
+        other_params = dict(
+            hidden_units = 128,
+        )
